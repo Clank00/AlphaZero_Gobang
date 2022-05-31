@@ -10,9 +10,9 @@ root_data_file = "data/"
 
 class Config:
     def __init__(self):
-        self.board_width = 8
-        self.board_height = 8
-        self.n_in_row = 5
+        self.board_width = 6
+        self.board_height = 6
+        self.n_in_row = 4
         self.board = Board(width=self.board_width, height=self.board_height, n_in_row=self.n_in_row)
         self.game = Game(self.board)
         # training params
@@ -21,7 +21,7 @@ class Config:
         self.lr_decay_per_iterations = 100  # learning rate decay after how many iterations
         self.lr_decay_speed = 5  # learning rate decay speed
         self.temp = 1.0  # the temperature param
-        self.n_playout = 400  # num of simulations for each move
+        self.n_playout = 200  # num of simulations for each move
         self.c_puct = 5
         self.buffer_size = 10000
         self.batch_size = 512  # mini-batch size for training
@@ -51,4 +51,4 @@ class Config:
         self.increase_mean_loss_times = 0 # the time of increasing loss, used to adjust lr
         self.adjust_lr_increase_loss_times = 3 # when the mean loss increase such times, then decrease lr by half
         self.episode_records = [] # save episode length for every game
-        self.use_gpu = False
+        self.use_gpu = True

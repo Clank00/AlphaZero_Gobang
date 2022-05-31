@@ -347,10 +347,10 @@ class PolicyValueNet():
 
         # entropy is equivalent to policy loss.
         return {
-            'combined_loss':loss.data[0],
-            'policy_loss': policy_loss.data[0],
-            'value_loss':value_loss.data[0],
-            'entropy': entropy.data[0]
+            'combined_loss':loss.item(),
+            'policy_loss': policy_loss.item(),
+            'value_loss':value_loss.item(),
+            'entropy': entropy.item()
         }
 
 

@@ -1,2 +1,5 @@
 .idea/
+*.pkl
+*.iml
+*.xml
 __pycache__

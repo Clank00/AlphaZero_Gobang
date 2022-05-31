@@ -42,7 +42,7 @@ class TrainPipeline():
         self.episode_len = 0
         self.augmented_len = 0
         for i in range(n_games):
-            winner, play_data, episode_len = self.config.game.start_self_play_game(self.mcts_player, temp=self.config.temp)
+            winner, play_data, episode_len = self.config.game.start_self_play_game(self.mcts_player, is_shown=1, temp=self.config.temp)
             self.episode_len += episode_len # episode_len is the length of each self_play epoch
             # augment the data
             play_data = self.augment_data(play_data)
