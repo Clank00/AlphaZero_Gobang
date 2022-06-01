@@ -203,7 +203,7 @@ class ResNet2(nn.Module):
         self.board_height = board_height
         # common layers
         self.conv_layer = ConvBlock(in_channels, out_channels)
-        self.res_layer = self.make_residual_layers(2, out_channels) # in AlphaGoZero paper: blocks=19 or 39
+        self.res_layer = self.make_residual_layers(6, out_channels) # in AlphaGoZero paper: blocks=19 or 39
 
         # policy head: action policy layers
         self.act_filters = 2

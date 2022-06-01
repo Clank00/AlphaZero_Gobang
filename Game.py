@@ -2,6 +2,8 @@
 from __future__ import print_function
 import numpy as np
 from VisualTool import *
+from gomokuUI import GomokuGUI
+
 
 class Game(object):
     def __init__(self, board, is_visualize=False):
@@ -69,6 +71,7 @@ class Game(object):
         """
         start a game between two players
         """
+        gui = GomokuGUI(self.board.width)
         if is_shown: self.visualTool.set_player(player1, player2, who_first)
         self.board.init_board(who_first)
         p1, p2 = self.board.players
@@ -85,6 +88,7 @@ class Game(object):
             self.board.do_move(move)
             if is_shown:
                 self.graphic(self.board, player1, player2)
+            gui.render_step(action=move, player=current_player)
             end, winner = self.board.game_end()
             if end:
                 if is_shown:
@@ -100,6 +104,7 @@ class Game(object):
         """ start a self-play game using a MCTS player, reuse the search tree
         store the self-play data: (state, mcts_probs, z)
         """
+        gui = GomokuGUI(self.board.width)
         self.board.init_board()
         p1, p2 = self.board.players
         states, mcts_probs, current_players = [], [], []
@@ -114,7 +119,8 @@ class Game(object):
             # perform a move
             self.board.do_move(move)
             if is_shown:
-                self.graphic_command(self.board, p1, p2)
+                # self.graphic_command(self.board, p1, p2)
+                gui.render_step(action=move, player=current_players[-1])
             end, winner = self.board.game_end()
             if end:
                 # winner from the perspective of the current player of each state

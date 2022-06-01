@@ -6,8 +6,7 @@ class HumanPlayer(Player):
     def __init__(self, player_no=0, player_name=""):
         Player.__init__(self, player_no, player_name)
         # self.tool = tool
-        self.can_click = True # can click the board
-
+        self.can_click = True  # can click the board
 
     # def play(self, board):
     #     '''play based on human input'''
@@ -23,19 +22,16 @@ class HumanPlayer(Player):
     #         move = self.play(board)
     #     return move
 
-
     def play(self, board, **kwargs):
         tool = kwargs['tool']
-        while(not tool.flag): # block
+        while (not tool.flag):  # block
             pass
-        location = tool.getmove() # [x,y]
+        location = tool.getmove()  # [x,y]
         move = board.loc2move(location)
         if move == -1 or move not in board.availables:
             print("invalid move")
             move = self.play(board)
         return move
 
-
     def __str__(self):
         return "HumanPlayer {}{}".format(self.get_player_no(), self.get_player_name())
-
