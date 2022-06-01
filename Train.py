@@ -22,7 +22,6 @@ import argparse
 from Util import *
 
 
-
 class TrainPipeline():
     def __init__(self, config=None):
         # params of the board and the game
@@ -265,8 +264,9 @@ class TrainPipeline():
 
 
 if __name__ == '__main__':
-    name = "epochs-350-opponent-Pure-win-1.00"
-    default = f"data/gomoku/{name}.pkl"  # 原先是None
+    # name = "epochs-1350-opponent-AlphaZero-win-0.60"  # 继续训练时要填这个
+    # default = f"data/gomoku/{name}.pkl"
+    default = None  # 原先是None
     parser = argparse.ArgumentParser(description='AlphaZero Training....')
     parser.add_argument('--config', default=default, type=str,
                         help='config files to resume training....')

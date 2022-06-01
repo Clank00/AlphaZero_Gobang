@@ -45,6 +45,6 @@ def run(config=None):
 
 
 if __name__ == '__main__':
-    name = "epochs-300-opponent-Pure-win-1.00"
+    name = "epochs-1350-opponent-AlphaZero-win-0.60"
     config = load_config(file_name=root_data_file + name + '.pkl', only_load_param=False)
     run(config)
