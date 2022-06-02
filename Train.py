@@ -170,7 +170,8 @@ class TrainPipeline():
         # if opponent is the Strongest Rollout Player, then win_ratio must be 1.0
         # else win_ratio >= win_ratio_alphazero
         if (self.config.evaluate_opponent == 'Pure' and win_ratio > self.config.best_win_pure_so_far) or \
-                (self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == 5000 and win_ratio == 1.0) or \
+                (
+                        self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == 5000 and win_ratio == 1.0) or \
                 (self.config.evaluate_opponent == 'AlphaZero' and win_ratio >= self.config.win_ratio_alphazero):
             print("New best policy!!!!!!!!")
             # load network parameters
@@ -279,10 +280,19 @@ class TrainPipeline():
             print('\n\rquit')
 
 
+"""
+tensorboard --logdir=D:\GitHub\AlphaZero_Gobang\out\logs 
+"""
 if __name__ == '__main__':
-    # name = "epochs-1350-opponent-AlphaZero-win-0.60"  # 继续训练时要填这个
-    # default = f"data/gomoku/{name}.pkl"
-    default = None  # 原先是None
+    # name = "epochs-500-opponent-Pure-win-1.00"  # 继续训练时要填这个
+    name = input("请输入pkl文件名（无后缀）：")
+    if name.lower() == "none":
+        default = None  # 原先是None
+        print("从空白网络开始训练")
+    else:
+        default = f"data/gomoku/{name}.pkl"
+        print(f"加载{default}继续训练")
+
     parser = argparse.ArgumentParser(description='AlphaZero Training....')
     parser.add_argument('--config', default=default, type=str,
                         help='config files to resume training....')

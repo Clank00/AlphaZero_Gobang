@@ -45,6 +45,6 @@ def run(config=None):
 
 
 if __name__ == '__main__':
-    name = "epochs-1350-opponent-AlphaZero-win-0.60"
+    name = input("请输入pkl文件名（无后缀）：")
     config = load_config(file_name=root_data_file + name + '.pkl', only_load_param=False)
     run(config)
