@@ -311,7 +311,7 @@ class GomokuGUI:
         :param update:
         :return:
         """
-        score = f'V_s: {self.value_s:.2f}%'
+        score = f'Win: {self.value_s:.2f}%'
         self._draw_text(score, (self.ScreenSize[0] * 0.11, self.ScreenSize[1] - self.UnitSize * 1.5),
                         backgroud_color=self._background_color, text_height=self.TestSize)
 
@@ -321,7 +321,7 @@ class GomokuGUI:
                         backgroud_color=self._background_color, text_height=self.TestSize)
         if update:
             pygame.display.update()
-        print(f"V_s: {self.value_s:.2f}%    V: {value:.2f}%     {self.step_counter}")
+        print(f"Win: {self.value_s:.2f}%    V: {value:.2f}%     {self.step_counter}")
 
     def update_value_s(self, value_s):
         self.value_s = float(value_s * 100)

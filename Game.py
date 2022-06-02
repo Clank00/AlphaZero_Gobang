@@ -113,9 +113,10 @@ class Game(object):
             policy = dict(zip(x, y))
             for a in range(self.board.width * self.board.width):
                 if a not in x: policy[a] = 0.
+            gui.update_value_s((1 - leaf_value) / 2)  # 左边显示胜率
             gui.draw_value(-leaf_value)  # 左右两个value都会画出，左边的是上一轮由动态网络生成，右边的是本轮由初始网络生成
 
-            move, move_probs = player.play(self.board, temp=temp, return_prob=True)
+            move, move_probs = player.play(self.board, temp=temp, epsilon=0.1, return_prob=True)  # 0.2感觉太随机了
             # store the data
             states.append(self.board.current_state())
             mcts_probs.append(move_probs)
@@ -135,6 +136,11 @@ class Game(object):
 
             end, winner = self.board.game_end()
             if end:
+                # 最后一步的v也显示/打印出来
+                action_probs_gui, leaf_value = player.mcts._policy_value_fn(self.board)
+                gui.update_value_s((1 - leaf_value) / 2)  # 左边显示胜率
+                gui.draw_value(-leaf_value)
+
                 # winner from the perspective of the current player of each state
                 winners_z = np.zeros(len(current_players))
                 if winner != -1:  # end and has a winner
