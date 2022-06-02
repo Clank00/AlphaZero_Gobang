@@ -35,7 +35,7 @@ class Config:
         self.start_game_num = 10  # the starting num of training
         self.game_batch_num = 10000  # 最多玩多少把就结束
         # num of simulations used for the pure mcts, which is used as the opponent to evaluate the trained policy
-        self.pure_mcts_playout_num = 1000
+        self.pure_mcts_playout_num = 0
 
         # New Added Parameters
         self.network = ResNet  # the type of network

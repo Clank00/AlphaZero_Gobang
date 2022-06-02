@@ -27,6 +27,7 @@ import argparse
 from Util import *
 from utils.debugging import AlphaZeroMonitor, logging_initialize
 
+NUM_ROLLOUT = 0
 
 class TrainPipeline():
     def __init__(self, config=None):
@@ -171,7 +172,7 @@ class TrainPipeline():
         # else win_ratio >= win_ratio_alphazero
         if (self.config.evaluate_opponent == 'Pure' and win_ratio > self.config.best_win_pure_so_far) or \
                 (
-                        self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == 5000 and win_ratio == 1.0) or \
+                        self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == NUM_ROLLOUT and win_ratio == 1.0) or \
                 (self.config.evaluate_opponent == 'AlphaZero' and win_ratio >= self.config.win_ratio_alphazero):
             print("New best policy!!!!!!!!")
             # load network parameters
@@ -189,18 +190,18 @@ class TrainPipeline():
 
         # ---------------Adjust Opponent---------------------#
         # Firstly, Make Rollout stronger(increase pure_mcts_playout_num)
-        # Secondly, when RolloutPlayer is the strongest version(mcts_num=5000) but still lose self.config change_opponent_continuous_times Times,
+        # Secondly, when RolloutPlayer is the strongest version(mcts_num=NUM_ROLLOUT) but still lose self.config change_opponent_continuous_times Times,
         # Then Change the opponent to AlphaZero Player
 
-        # if opponent is RolloutPlayer, Then make it Stronger!!
-        if self.config.evaluate_opponent == 'Pure' and win_ratio > self.config.best_win_pure_so_far:
-            if win_ratio == 1.0 and self.config.pure_mcts_playout_num < 5000:
-                self.config.pure_mcts_playout_num += 1000  # stronger
-                self.config.best_win_pure_so_far = 0.0  # reset win_ratio
+        # 别搞这些有的没的了，棋盘大了一点用都没有
+        # # if opponent is RolloutPlayer, Then make it Stronger!!
+        # if self.config.evaluate_opponent == 'Pure' and win_ratio > self.config.best_win_pure_so_far:
+        #     if win_ratio == 1.0 and self.config.pure_mcts_playout_num < NUM_ROLLOUT:
+        #         self.config.pure_mcts_playout_num += 1000  # stronger
+        #         self.config.best_win_pure_so_far = 0.0  # reset win_ratio
 
-        # current model continuously win(or tie) against the strongest pure mcts player(mcts_play_out>=5000)
-        if self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num >= 5000 \
-                and win_ratio == 1.0:  # note: add equal
+        # current model continuously win(or tie) against the strongest pure mcts player(mcts_play_out>=NUM_ROLLOUT)
+        if self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num >= NUM_ROLLOUT and win_ratio == 1.0:
             self.config.continuous_win_pure_times += 1
 
         # change the opponent
