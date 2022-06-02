@@ -2,6 +2,11 @@
 """
 An implementation of the training pipeline of AlphaZero for Gobang
 
+tensorboard查看loss曲线使用方法：
+1、在Terminal中运行 tensorboard --logdir=D:\GitHub\AlphaZero_Gobang\out\logs
+ （其中D:\GitHub\AlphaZero_Gobang\为项目地址需要替换）
+2、在浏览器中打开 http://localhost:6006/ 即可查看曲线
+
 """
 
 from __future__ import print_function
@@ -20,6 +25,7 @@ from RolloutPlayer import RolloutPlayer
 from Config import *
 import argparse
 from Util import *
+from utils.debugging import AlphaZeroMonitor, logging_initialize
 
 
 class TrainPipeline():
@@ -35,6 +41,8 @@ class TrainPipeline():
         # forward the reference of policy_value_net'predict function，for MCTS simulation
         self.mcts_player = AlphaZeroPlayer(self.policy_value_net.predict, c_puct=self.config.c_puct,
                                            nplays=self.config.n_playout, is_selfplay=True)
+
+        self.monitor = AlphaZeroMonitor(self)
 
     def self_play(self, n_games=1):
         """
@@ -230,6 +238,8 @@ class TrainPipeline():
     def run(self):
         """run the training pipeline"""
         print("start training from game:{}".format(self.config.start_game_num))
+        logging_initialize()
+
         try:
             for i in trange(self.config.start_game_num, self.config.game_batch_num):
 
@@ -245,6 +255,13 @@ class TrainPipeline():
 
                 if len(self.config.data_buffer) > self.config.batch_size:
                     loss_info = self.optimize(iteration=i + 1)  # big step 2
+
+                    # tensorboard
+                    self.monitor.log(loss_info['combined_loss'], 'loss')
+                    self.monitor.log(loss_info['value_loss'], 'value_loss')
+                    self.monitor.log(loss_info['policy_loss'], 'policy_loss')
+                    self.monitor.log(loss_info['entropy'], 'entropy')
+
                     self.config.loss_records.append(loss_info)
 
                 self.config.start_game_num = i + 1  # update for restart

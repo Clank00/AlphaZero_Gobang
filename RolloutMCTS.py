@@ -51,7 +51,7 @@ class RolloutMCTS(MCTS):
             [
                 action
                 for action, child in self._root._children.items()
-                if child._n_visits == value
+                if child._n_visits == value._n_visits
             ]
         )
         return action
