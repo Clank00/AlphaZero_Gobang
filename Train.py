@@ -29,6 +29,7 @@ from utils.debugging import AlphaZeroMonitor, logging_initialize
 
 NUM_ROLLOUT = 0
 
+
 class TrainPipeline():
     def __init__(self, config=None):
         # params of the board and the game
@@ -69,7 +70,8 @@ class TrainPipeline():
         if self.config.is_adjust_lr and iteration % self.config.adjust_lr_freq == 0:
             old_probs, old_v = self.policy_value_net.predict_many(state_batch)  # used for adjusting lr
 
-        for i in range(self.config.per_game_opt_times):  # number of opt times
+        opt_times = 5.12 * len(self.config.data_buffer) / self.config.batch_size
+        for i in range(opt_times):  # number of opt times   原为self.config.per_game_opt_times
             loss_info = self.policy_value_net.fit(state_batch, mcts_probs_batch, winner_batch,
                                                   self.config.learn_rate * self.config.lr_multiplier)
         if self.config.is_adjust_lr and iteration % self.config.adjust_lr_freq == 0:
@@ -243,7 +245,9 @@ class TrainPipeline():
         logging_initialize()
 
         try:
-            for i in trange(self.config.start_game_num, self.config.game_batch_num):
+            for i in trange(self.config.game_batch_num):
+                if i < self.config.start_game_num:  # 这样写为了trange可以看出来训练了总量的多少
+                    continue
 
                 self.self_play(self.config.play_batch_size)  # big step 1
                 print("iteration i:{}, episode_len:{}, augmented_len:{}, current_buffer_len:{}".format(i + 1,
