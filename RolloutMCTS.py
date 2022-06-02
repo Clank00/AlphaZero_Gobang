@@ -8,6 +8,8 @@ import copy
 Random Rollout MCTS,
 Every step of simulation, the action is randomly chosen
 '''
+
+
 class RolloutMCTS(MCTS):
     def __init__(self, nplays=1000, c_puct=5.0, epsilon=0, alpha=0.3, limit=1000):
         MCTS.__init__(self, nplays, c_puct, epsilon, alpha)
@@ -18,7 +20,7 @@ class RolloutMCTS(MCTS):
                 player wins, -1 if the opponent wins, and 0 if it is a tie.
                 """
         action_probs = self._policy(state)
-        is_end, _ = state.game_end() # from the perspective of beginning of the rollout
+        is_end, _ = state.game_end()  # from the perspective of beginning of the rollout
 
         # begin rollout
         for i in range(self._limit):
@@ -39,9 +41,20 @@ class RolloutMCTS(MCTS):
         return is_end, action_probs, leaf_value
 
     def _play(self, temp=1e-3):
-        return max(self._root._children.items(), key=lambda act_node: act_node[1]._n_visits)[0]
-
-
+        # act_node[0]指items()里面的key，act_node[1]指items()里面的value
+        # return max(self._root._children.items(), key=lambda act_node: act_node[1]._n_visits)[0]
+        """
+        Select the child with the highest UCB score.  这种写法更有随机性，但不容易看出BUG
+        """
+        key, value = max(self._root._children.items(), key=lambda act_node: act_node[1]._n_visits)
+        action = np.random.choice(
+            [
+                action
+                for action, child in self._root._children.items()
+                if child._n_visits == value
+            ]
+        )
+        return action
 
     def _rollout(self, board):
         """rollout_policy_fn -- a coarse, fast version of policy_fn used in the rollout phase."""
@@ -50,16 +63,12 @@ class RolloutMCTS(MCTS):
         tmp_action_probs = zip(board.availables, action_probs)
         return max(tmp_action_probs, key=itemgetter(1))[0]
 
-
     def _policy(self, board):
         """a function that takes in a state and outputs a list of (action, probability)
         tuples"""
         # return uniform probabilities and 0 score for pure MCTS
-        action_probs = np.ones(len(board.availables))/len(board.availables)
+        action_probs = np.ones(len(board.availables)) / len(board.availables)
         return zip(board.availables, action_probs)
-
-
 
     def __str__(self):
         return "RolloutMCTS"
-
