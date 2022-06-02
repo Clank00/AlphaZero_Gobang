@@ -38,24 +38,24 @@ class MinMaxStats(object):
 
 
 def _get_color(value: float):  # -1<value<1
-    # r = 0
-    # g = 0
-    # if -1 <= value < 0:  # 红到黄
-    #     r = 255
-    #     g = int(255 * (value + 1))
-    # elif 0 <= value < 1:  # 黄到绿
-    #     r = int(255 * (1 - value))
-    #     g = 255
-    # return r, g, 0
     r = 0
     g = 0
-    if 0 <= value < 0.5:  # 红到黄
+    if -1 <= value < 0:  # 红到黄
         r = 255
-        g = int(255 * value * 2)
-    elif 0.5 <= value <= 1:  # 黄到绿
-        r = int(255 * (1 - value) * 2)
+        g = int(255 * (value + 1))
+    elif 0 <= value <= 1:  # 黄到绿
+        r = int(255 * (1 - value))
         g = 255
     return r, g, 0
+    # r = 0
+    # g = 0
+    # if 0 <= value < 0.5:  # 红到黄
+    #     r = 255
+    #     g = int(255 * value * 2)
+    # elif 0.5 <= value <= 1:  # 黄到绿
+    #     r = int(255 * (1 - value) * 2)
+    #     g = 255
+    # return r, g, 0
 
 
 class GomokuGUI:
@@ -198,7 +198,7 @@ class GomokuGUI:
 
         # 绘制pi
         for a, p in policy.items():
-            self._draw_pi(a.index, p, pi[a.index], min_max_stats.normalize(v[a.index]))
+            self._draw_pi(a, p, pi[a], v[a])    # min_max_stats.normalize(v[a.index])
         # print(v)
 
         pygame.display.update()

@@ -14,14 +14,12 @@ class Game(object):
     def show(self):
         self.visualTool.draw()
 
-
     def graphic(self, board, player1, player2):
         """
         Draw the board and show game info
         """
         loc = self.board.move2loc(self.board.last_move)
         self.visualTool.graphic(loc[0], loc[1])
-
 
     def graphic_command(self, board, player1, player2):
         '''graphic in the command line for self-play'''
@@ -43,18 +41,17 @@ class Game(object):
                 p = board.states.get(loc, -1)
                 if p == player1_no:
                     if loc == self.board.last_move:
-                        print(("[%s]" %(self.player1_symbol)).center(8), end='')
+                        print(("[%s]" % (self.player1_symbol)).center(8), end='')
                     else:
                         print(self.player1_symbol.center(8), end='')
                 elif p == player2_no:
                     if loc == self.board.last_move:
-                        print(("[%s]" %(self.player2_symbol)).center(8), end='')
+                        print(("[%s]" % (self.player2_symbol)).center(8), end='')
                     else:
                         print(self.player2_symbol.center(8), end='')
                 else:
                     print('_'.center(8), end='')
             print('\r\n\r\n')
-
 
     def set_player_symbol(self, who_first):
         '''show board, set player symbol X OR O'''
@@ -65,7 +62,6 @@ class Game(object):
         else:
             self.player1_symbol = "O"
             self.player2_symbol = "X"
-
 
     def start_game(self, player1, player2, who_first=0, is_shown=1):
         """
@@ -110,7 +106,15 @@ class Game(object):
         states, mcts_probs, current_players = [], [], []
         if is_shown:
             self.set_player_symbol(who_first=0)
-        while(True):
+        while True:
+            # ZE gui显示用，self.board会变，所以放这里（神他妈奇，action_probs_gui变量会被下面哪个语句改变值，去掉当前的move）
+            action_probs_gui, leaf_value = player.mcts._policy_value_fn(self.board)
+            x, y = zip(*action_probs_gui)
+            policy = dict(zip(x, y))
+            for a in range(self.board.width * self.board.width):
+                if a not in x: policy[a] = 0.
+            gui.draw_value(-leaf_value)  # 左右两个value都会画出，左边的是上一轮由动态网络生成，右边的是本轮由初始网络生成
+
             move, move_probs = player.play(self.board, temp=temp, return_prob=True)
             # store the data
             states.append(self.board.current_state())
@@ -120,15 +124,23 @@ class Game(object):
             self.board.do_move(move)
             if is_shown:
                 # self.graphic_command(self.board, p1, p2)
-                gui.render_step(action=move, player=current_players[-1])
+                # gui.render_step(action=move, player=current_players[-1])
+                gui.render_all_step(action=move,
+                                    player=current_players[-1],
+                                    policy=policy,
+                                    pi=move_probs,
+                                    v=player.mcts.child_values[-1],
+                                    min_max_stats=None
+                                    )
+
             end, winner = self.board.game_end()
             if end:
                 # winner from the perspective of the current player of each state
                 winners_z = np.zeros(len(current_players))
-                if winner != -1: # end and has a winner
+                if winner != -1:  # end and has a winner
                     winners_z[np.array(current_players) == winner] = 1.0
                     winners_z[np.array(current_players) != winner] = -1.0
-                #reset MCTS root node
+                # reset MCTS root node
                 player.reset_player()
                 if is_shown:
                     if winner != -1:
@@ -136,7 +148,6 @@ class Game(object):
                     else:
                         print("Game end. Tie")
                 return winner, zip(states, mcts_probs, winners_z), len(states)
-
 
     def __str__(self):
         return "Game"

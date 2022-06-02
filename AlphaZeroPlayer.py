@@ -28,7 +28,17 @@ class AlphaZeroPlayer(Player):
             # with the default temp=1e-3, this is almost equivalent to choosing the move with the highest prob
             temp = 1.0 if (self._is_selfplay and len(board.states) < explore_step) else 1e-3
             acts, probs = self.mcts.simulate(board, temp)
-            move_probs[list(acts)] = probs
+            # ZE
+            # self.mcts.child_visits.append([
+            #     float(self.mcts._root._children[a]._P) if a in self.mcts._root._children else 0.
+            #     for a in range(board.width * board.width)
+            # ])
+            self.mcts.child_values.append([
+                float(self.mcts._root._children[a]._Q) if a in self.mcts._root._children else 0.
+                for a in range(board.width*board.width)
+            ])
+
+            move_probs[list(acts)] = probs  # 神奇的操作
 
             if self._add_noise:
                 # not self-play and if steps is larger than after_step_no_noise, then don't add noise

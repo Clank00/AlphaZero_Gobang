@@ -10,6 +10,8 @@ class MCTS(object):
         self._epsilon = epsilon # the ratio of dirichlet noise
         self._alpha = alpha # dirichlet noise parameter
         self._is_selfplay = is_selfplay # whether used to selfplay
+        self.child_visits = []  # ZE
+        self.child_values = []  # ZE
 
     def _search(self, state):
         """Run a single search from the root to the leaf, getting a value at the leaf and
