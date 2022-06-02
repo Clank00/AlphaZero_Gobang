@@ -32,7 +32,7 @@ class Config:
         self.adjust_lr_freq = 5  # the frenquency of lr adjustment
         self.kl_targ = 0.02  # KL，used for lr adjustment, the smaller kl_targ, the smaller lr tends to be
         self.check_freq = 50  # frequency of checking the performance of current model and saving model
-        self.start_game_num = 0  # the starting num of training
+        self.start_game_num = 10  # the starting num of training
         self.game_batch_num = 10000  # 最多玩多少把就结束
         # num of simulations used for the pure mcts, which is used as the opponent to evaluate the trained policy
         self.pure_mcts_playout_num = 1000
