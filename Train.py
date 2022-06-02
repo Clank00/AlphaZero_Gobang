@@ -70,7 +70,7 @@ class TrainPipeline():
         if self.config.is_adjust_lr and iteration % self.config.adjust_lr_freq == 0:
             old_probs, old_v = self.policy_value_net.predict_many(state_batch)  # used for adjusting lr
 
-        opt_times = 5.12 * len(self.config.data_buffer) / self.config.batch_size
+        opt_times = int(5.12 * len(self.config.data_buffer) / self.config.batch_size)
         for i in range(opt_times):  # number of opt times   原为self.config.per_game_opt_times
             loss_info = self.policy_value_net.fit(state_batch, mcts_probs_batch, winner_batch,
                                                   self.config.learn_rate * self.config.lr_multiplier)
