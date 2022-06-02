@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
+import math
+
 import numpy as np
 
 '''
 Node of MCTS Searching Tree
 '''
+
+
 class TreeNode(object):
     def __init__(self, parent, prior_p):
-        self._parent = parent # parent node
+        self._parent = parent  # parent node
         self._children = {}  # child nodes，a map from action to TreeNode
-        self._n_visits = 0 # visit count
-        self._Q = 0 # Q Value
-        self._u = 0 # bonus，calculated based on the visit count and prior probability
-        self._P = prior_p # prior probability,calculated based on the Network
+        self._n_visits = 0  # visit count
+        self._Q = 0  # Q Value
+        self._u = 0  # bonus，calculated based on the visit count and prior probability
+        self._P = prior_p  # prior probability,calculated based on the Network
 
     def expand(self, action_priors):
         """Expand tree by creating new children.
@@ -30,7 +34,6 @@ class TreeNode(object):
                 """
         return max(self._children.items(), key=lambda act_node: act_node[1]._get_value(c_puct, epsilon, alpha))
 
-
     def _get_value(self, c_puct, epsilon=0, alpha=0.3):
         """Calculate and return the value for this node: a combination of leaf evaluations, Q, and
         this node's prior adjusted for its visit count, u
@@ -40,9 +43,15 @@ class TreeNode(object):
         epsilon -- the fraction of the prior probability, and 1-epsilon is the corresponding dirichlet noise fraction
         alpha -- the parameter of dirichlet noise
         """
+        # noise = 0
+        # if epsilon > 0: noise = np.random.dirichlet([alpha])[0] # 添加噪声，目前噪声比例epsilon=0,即，不使用噪声
+        # self._u = c_puct * ((1-epsilon) * self._P + epsilon * noise) * \
+        #           np.sqrt(self._parent._n_visits) / (1 + self._n_visits)
+        # return self._Q + self._u
         noise = 0
-        if epsilon > 0: noise = np.random.dirichlet([alpha])[0] # 添加噪声，目前噪声比例epsilon=0,即，不使用噪声
-        self._u = c_puct * ((1-epsilon) * self._P + epsilon * noise) * \
+        if epsilon > 0: noise = np.random.dirichlet([alpha])[0]  # 添加噪声，目前噪声比例epsilon=0,即，不使用噪声
+        pb_c = math.log((self._parent._n_visits + 19652 + 1) / 19652) + c_puct  # 其实几乎等于c_puct
+        self._u = pb_c * ((1 - epsilon) * self._P + epsilon * noise) * \
                   np.sqrt(self._parent._n_visits) / (1 + self._n_visits)
         return self._Q + self._u
 

@@ -22,7 +22,7 @@ class Config:
         self.lr_decay_speed = 5  # learning rate decay speed
         self.temp = 1.0  # the temperature param
         self.n_playout = 300  # num of simulations for each move
-        self.c_puct = 5
+        self.c_puct = 2.1  # c1常数，原来是5
         self.buffer_size = 10000
         self.batch_size = 512  # mini-batch size for training
         self.data_buffer = deque(maxlen=self.buffer_size)

@@ -103,7 +103,7 @@ class GomokuGUI:
         self.ScreenSize = (self.BoardSize * self.UnitSize + 2 * self.UnitSize,
                            self.BoardSize * self.UnitSize + 3 * self.UnitSize)
         self.screen = pygame.display.set_mode(self.ScreenSize, 0, 32)
-        pygame.display.set_caption('MuZero_Gomoku')
+        pygame.display.set_caption('AlphaZero_Gomoku')
 
         # button areas
         self.areas['SwitchPlayer'] = Rect(self.ScreenSize[0] / 2 - self.UnitSize * 1.5,

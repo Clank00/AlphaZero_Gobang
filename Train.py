@@ -162,8 +162,7 @@ class TrainPipeline():
         # if opponent is the Strongest Rollout Player, then win_ratio must be 1.0
         # else win_ratio >= win_ratio_alphazero
         if (self.config.evaluate_opponent == 'Pure' and win_ratio > self.config.best_win_pure_so_far) or \
-                (
-                        self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == 5000 and win_ratio == 1.0) or \
+                (self.config.evaluate_opponent == 'Pure' and self.config.pure_mcts_playout_num == 5000 and win_ratio == 1.0) or \
                 (self.config.evaluate_opponent == 'AlphaZero' and win_ratio >= self.config.win_ratio_alphazero):
             print("New best policy!!!!!!!!")
             # load network parameters
