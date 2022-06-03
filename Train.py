@@ -27,7 +27,7 @@ import argparse
 from Util import *
 from utils.debugging import AlphaZeroMonitor, logging_initialize
 
-NUM_ROLLOUT = 0
+NUM_ROLLOUT = 100
 
 
 class TrainPipeline():
